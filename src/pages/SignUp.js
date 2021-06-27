@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import firebase from '../config/firebase'
 
 const SignUp = () =>{
@@ -6,7 +6,7 @@ const SignUp = () =>{
     const[password,setPassword] = useState('')
     const handleSubmit = (e) =>{
         e.preventDefault()
-        firebase.auth().createUserWithEmailAndPassword(email,pasword)
+        firebase.auth().createUserWithEmailAndPassword(email,password)
         .catch(err => {
             console.log(err)
         })

@@ -14,6 +14,6 @@ const firebaseConfig = {
   measurementId: "G-RC2K3EF530",
 };
 
-firebase.inisitalizeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig)
 
 export default firebase;
