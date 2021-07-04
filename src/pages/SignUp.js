@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import firebase from "../config/firebase";
 import Avatar from "@material-ui/core/Avatar";
@@ -50,17 +51,23 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
+  const [name, setName] = useState("")
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
+      .then(({ user }) => {
+        user.updateProfile({
+          displayName: name,
+        })
+      })
       .catch((err) => {
-        console.log(err);
-      });
-  };
+        console.log(err)
+      })
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -74,27 +81,18 @@ export default function SignUp() {
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 variant="outlined"
                 required
                 fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
+                id="Name"
+                label="Name"
+                name="Name"
+                autoComplete="name"
+                 onChange={(e) => {
+                  setName(e.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -157,56 +155,3 @@ export default function SignUp() {
     </Container>
   );
 }
-
-// import { useState } from "react";
-// import firebase from "../config/firebase";
-
-// const SignUp = () => {
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     firebase
-//       .auth()
-//       .createUserWithEmailAndPassword(email, password)
-//       .catch((err) => {
-//         console.log(err);
-//       });
-//   };
-
-//   return (
-//     <>
-//       <h1>Sign Up</h1>
-//       <form onSubmit={handleSubmit}>
-//         <div>
-//           <label htmlFor="email">E-mail</label>
-//           <input
-//             type="email"
-//             id="email"
-//             name="email"
-//             placeholder="Email"
-//             onChange={(e) => {
-//               setEmail(e.target.value);
-//             }}
-//           />
-//         </div>
-//         <div>
-//           <label htmlFor="password">Password</label>
-//           <input
-//             type="password"
-//             id="password"
-//             name="password"
-//             placeholder="Password"
-//             onChange={(e) => {
-//               setPassword(e.target.value);
-//             }}
-//           />
-//         </div>
-//         <button type="submit">SignUp</button>
-//       </form>
-//     </>
-//   );
-// };
-
-// export default SignUp;
-//
