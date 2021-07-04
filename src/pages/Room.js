@@ -1,16 +1,14 @@
-import { useState, useEffect, useContext } from "react"
-import { AuthContext } from "../AuthService"
-import firebase from "../config/firebase"
-import "firebase/firestore"
-
+import { useState, useEffect, useContext } from 'react'
+import { AuthContext } from '../AuthService'
+import firebase from '../config/firebase'
 const Room = () => {
   const [messages, setMessages] = useState([])
-  const [value, setValue] = useState("")
+  const [value, setValue] = useState('')
 
   useEffect(() => {
     firebase
       .firestore()
-      .collection("messages")
+      .collection('messages')
       .onSnapshot((snapshot) => {
         const messages = snapshot.docs.map((doc) => {
           return doc.data()
@@ -30,7 +28,7 @@ const Room = () => {
   const user = useContext(AuthContext)
   const handleSubmit = (e) => {
     e.preventDefault()
-    firebase.firestore().collection("messages").add({
+    firebase.firestore().collection('messages').add({
       content: value,
       user: user.displayName,
       date: new Date(),
@@ -50,14 +48,10 @@ const Room = () => {
         })}
       </ul>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
+        <input type="text" value={value} onChange={(e) => setValue(e.target.value)} />
         <button type="submit">送信</button>
       </form>
-      <button onClick={() => firebase.auth().signout()}>Logout</button>
+      <button onClick={() => firebase.auth().signOut()}>Logout</button>
     </>
   )
 }
