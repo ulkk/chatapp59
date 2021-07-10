@@ -1,11 +1,12 @@
-import { useState, useEffect, useContext } from "react"
-import { AuthContext } from "../AuthService"
-import firebase from "../config/firebase"
-import "firebase/firestore"
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../AuthService";
+import firebase from "../config/firebase";
+import "firebase/firestore";
+//import "../css/style.scss";
 
 const Room = () => {
-  const [messages, setMessages] = useState([])
-  const [value, setValue] = useState("")
+  const [messages, setMessages] = useState([]);
+  const [value, setValue] = useState("");
 
   useEffect(() => {
     firebase
@@ -13,40 +14,55 @@ const Room = () => {
       .collection("messages")
       .onSnapshot((snapshot) => {
         const messages = snapshot.docs.map((doc) => {
-          return doc.data()
-        })
+          let data = doc.data();
+          data.id = doc.id;
+          return data;
+        });
         messages.sort(function (a, b) {
           if (a.date > b.date) {
-            return 1
+            return 1;
           } else if (a.date < b.date) {
-            return -1
+            return -1;
           }
-          return 0
-        })
-        setMessages(messages)
-      })
-  }, [])
+          return 0;
+        });
+        setMessages(messages);
+      });
+  }, []);
 
-  const user = useContext(AuthContext)
+  const user = useContext(AuthContext);
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     firebase.firestore().collection("messages").add({
       content: value,
       user: user.displayName,
       date: new Date(),
-    })
-  }
-  console.log(user)
+    });
+  };
   return (
     <>
       <h1>Room</h1>
       <ul>
         {messages?.map((message, index) => {
           return (
-            <li key={index}>
-              {message.user}:{message.content}
-            </li>
-          )
+            <>
+              <li key={index}>
+                {message.user}:{message.content}
+                <button
+                  className="style"
+                  onClick={() =>
+                    firebase
+                      .firestore()
+                      .collection("messages")
+                      .doc(message.id)
+                      .delete()
+                  }
+                >
+                  削除
+                </button>
+              </li>
+            </>
+          );
         })}
       </ul>
       <form onSubmit={handleSubmit}>
@@ -59,6 +75,6 @@ const Room = () => {
       </form>
       <button onClick={() => firebase.auth().signout()}>Logout</button>
     </>
-  )
-}
-export default Room
+  );
+};
+export default Room;
