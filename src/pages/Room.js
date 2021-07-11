@@ -37,6 +37,7 @@ const Room = () => {
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       //サーバー（firestore上）の時間をデータとして追加できる
     })
+    setValue('')
   }
 
   console.log(user)
