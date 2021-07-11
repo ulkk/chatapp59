@@ -35,6 +35,7 @@ const Room = () => {
       user: user.displayName,
       date: new Date(),
     })
+    setValue('')
   }
   console.log(user)
   return (
@@ -55,7 +56,6 @@ const Room = () => {
           value={value}
           onChange={(e) => setValue(e.target.value)}
         />
-        <button type="reset" onClick={() => setValue('')}>Clear</button>
         <button type="submit">送信</button>
       </form>
       <button onClick={() => firebase.auth().signout()}>Logout</button>
