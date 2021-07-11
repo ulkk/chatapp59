@@ -50,13 +50,15 @@ const Room = () => {
                 {message.user}:{message.content}
                 <button
                   className="style"
-                  onClick={() =>
-                    firebase
-                      .firestore()
-                      .collection("messages")
-                      .doc(message.id)
-                      .delete()
-                  }
+                  onClick={() => {
+                    if (message.user === user.displayName) {
+                      firebase
+                        .firestore()
+                        .collection("messages")
+                        .doc(message.id)
+                        .delete();
+                    }
+                  }}
                 >
                   削除
                 </button>
