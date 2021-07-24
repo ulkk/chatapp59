@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import firebase from '../config/firebase'
+import 'firebase/storage'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -52,19 +53,42 @@ export default function SignUp() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [iconURL,setIconURL]=useState('')
+
   const handleSubmit = (e) => {
     e.preventDefault()
+    const fileList = document.getElementById('input').files;
+    console.log(fileList)
+    if(fileList.length===0){
+      setIconURL('')
+     }else{
+        //for(var i=0;i<fileList.length;i++){
+          var file = fileList[0]
+          var storageRef = firebase.storage().ref();
+          var ImagesRef = storageRef.child('icons/'+file.name);
+          
+          ImagesRef.put(file).then(function(snapshot) {
+            ImagesRef.getDownloadURL().then(function(url){
+              setIconURL(url)
+            });
+          });
+        //}
+      }
+
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then(({ user }) => {
         user.updateProfile({
           displayName: name,
+          iconURL:iconURL
         })
       })
       .catch((err) => {
         console.log(err)
       })
+
+ 
   }
 
   return (
@@ -122,6 +146,10 @@ export default function SignUp() {
                 }}
               />
             </Grid>
+            <form method="post" encType="multipart/form-data">
+              アイコンを選択
+              <input type="file" id = "input" name="avatar" accept="image/*"/>
+            </form>
             <Grid item xs={12}>
               <FormControlLabel
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
