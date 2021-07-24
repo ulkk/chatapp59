@@ -123,7 +123,7 @@ const Room = () => {
         <input type="file" id="input" name="avatar" accept="image/*" />
       </form>
 
-      <button onClick={() => firebase.auth().signout()}>Logout</button>
+      <button onClick={() => firebase.auth().signOut()}>Logout</button>
     </>
   )
 }
